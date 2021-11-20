@@ -46,7 +46,7 @@ RegisterNUICallback('um-hackerphone:nuicallback:vehiclehealth', function()
         AddExplosion(vehpos.x, vehpos.y, vehpos.z, 5, 50.0, true, false, true)
         else
            TriggerEvent('um-hackerphone:client:notify')
-		end
+	end
     end
 end)
 
