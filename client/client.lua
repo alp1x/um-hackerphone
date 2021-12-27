@@ -32,7 +32,7 @@ CreateThread(function()
 	    DisableControlAction(0, 202, true) -- disable escape
 	    DisableControlAction(0, 322, true) -- disable escape
 	    DisableControlAction(0, 245, true) -- disable chat
-	    DisableControlAction(0, 24, true) 
+	    DisableControlAction(0, 24, true) -- disable
         end
         Wait(sleep)
     end
