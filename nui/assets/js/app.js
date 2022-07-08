@@ -2,7 +2,7 @@ window.addEventListener('message', function(event) {
     if (event.data.UMHackerPhoneNui == 'open') {
         $('body').css('display', 'block');
     }
-    if (event.data.UMHackerPhoneTargetNui == 'open') {
+    else if (event.data.UMHackerPhoneTargetNui == 'open') {
         $('.notify').css('display', 'block');
         $('.uyuyorumterminal').css('display', 'none');
         $('.notify').html('~$ root@qbcore hacking started');
@@ -16,7 +16,7 @@ window.addEventListener('message', function(event) {
             return;
         }, 5000);
     }
-    if (event.data.UMHackerPhoneNotifyNui == 'open') {
+    else if (event.data.UMHackerPhoneNotifyNui == 'open') {
         $('.notify').css('display', 'block');
         $('.notify').html('~$ root@qbcore error 503');
         $('.uyuyorumterminal').css('display', 'block');
