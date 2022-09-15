@@ -25,7 +25,7 @@ RegisterNetEvent('um-hackerphone:server:targetinformation', function()
             ['targetdob'] = TargetPlayer.PlayerData.charinfo.birthdate,
             ['targetphone'] = TargetPlayer.PlayerData.charinfo.phone,
             ['targetbank'] = TargetPlayer.PlayerData.money['bank']
-         }
+          }
       TriggerClientEvent('um-hackerphone:client:targetinfornui',src,targetinfo)
    else
       TriggerClientEvent('um-hackerphone:client:notify',src)
