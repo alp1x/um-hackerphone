@@ -1,7 +1,23 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
 QBCore.Functions.CreateUseableItem("hackerphone", function(source)
-   TriggerClientEvent('um-hackerphone:client:openphone',source)
+   local src = source
+	local Player = QBCore.Functions.GetPlayer(src)
+   local name = Player.PlayerData.charinfo.firstname
+   TriggerClientEvent('um-hackerphone:client:openphone',src,name)
+end)
+
+QBCore.Functions.CreateUseableItem("tracker", function(source)
+   TriggerClientEvent('um-hackerphone:client:vehicletracker',source)
+end)
+
+QBCore.Functions.CreateUseableItem("centralchip", function(source)
+   TriggerClientEvent('um-hackerphone:client:centralchip',source)
+end)
+
+RegisterNetEvent('um-hackerphone:server:removeitem', function(item)
+   local Player = QBCore.Functions.GetPlayer(source)
+   Player.Functions.RemoveItem(item, 1)
 end)
 
 RegisterNetEvent('um-hackerphone:server:targetinformation', function()

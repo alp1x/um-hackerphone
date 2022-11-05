@@ -1,18 +1,19 @@
--- Resource Metadata
 fx_version 'cerulean'
-games { 'gta5' }
+game 'gta5' 
 
 author 'uyuyorum'
 description 'UM - Hacker Phone'
-version '1.0.0'
-
+version '2.0.0'
 ui_page 'nui/ui.html'
-	files { 
+
+files { 
+		'config.js',
 		'nui/ui.html',
 		'nui/assets/img/*.png',
 		'nui/assets/css/*.css',
 		'nui/assets/js/*.js',
-	}
+		'nui/assets/sounds/*.mp3'
+}
 	
-client_script {'client/client.lua'}
-server_script {'server/server.lua'}
+client_scripts {'client/anim.lua','client/client.lua'}
+server_script 'server/server.lua'
