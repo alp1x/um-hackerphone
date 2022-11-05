@@ -7,24 +7,24 @@
 Hacker Phone you can use for **[qb-core](https://github.com/qbcore-framework/qb-core)**
 
 <p align="center">
-  <img width="160" height="300" src="https://i.hizliresim.com/5xyqp20.png">
-<img width="160" height="300" src="https://i.hizliresim.com/ibtdmkg.png">
+  <img width="300" height="300" src="https://cdn.discordapp.com/attachments/714262233730908230/1038588183501344788/fivemhackerphone.png">
 </p>
 
 
-## Features
+## Features V2
++ User Information
++ Vehicle Tracking
 + Blackout
-+ Nearby user information
-+ Terminal
-+ Explosion
-+ [Video Preview](https://streamable.com/sruub5)
++ Security Cams
++ Terminal (soon)
++ Vue.js
++ [Video Preview](https://www.youtube.com/watch?v=RuDvjsSow4A)
 
 
 ## How to use
-+ add item "hackerphone"
++ open shared_items folder and add items
 + server.cfg ```ensure um-hackerphone```
 + use item {show nui}
-+ hide nui key {backspace}
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
