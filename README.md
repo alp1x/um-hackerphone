@@ -21,10 +21,12 @@ Hacker Phone you can use for **[qb-core](https://github.com/qbcore-framework/qb-
 + [Video Preview](https://www.youtube.com/watch?v=RuDvjsSow4A)
 
 
-## How to use
-+ open shared_items folder and add items
-+ server.cfg ```ensure um-hackerphone```
-+ use item {show nui}
+
+## Requirements
++ [qb-core](https://github.com/qbcore-framework/qb-core)
++ [ps-ui](https://github.com/Project-Sloth/ps-ui)
+
+
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
