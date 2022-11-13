@@ -2,7 +2,7 @@ UMHackerPhone = [];
 
 UMHackerPhone.CloseKey = "Escape"
 
-UMHackerPhone.BlackoutSeconds = 45
+UMHackerPhone.BlackoutSeconds = 10
 
 UMHackerPhone.Cams = {
     [1]  : "Pacific Bank CAM#1",
