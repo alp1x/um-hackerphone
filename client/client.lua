@@ -78,8 +78,9 @@ RegisterNetEvent("um-hackerphone:client:vehicletracker", function()
 		local vehicleinfo = {
 			["plate"] = QBCore.Functions.GetPlate(vehicle),
 			["vehname"] = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)):lower(),
-			["vehengine"] = GetVehicleEngineHealth(vehicle),
-			["vehicle"] = vehicle
+			["vehengine"] = math.floor(GetVehicleEngineHealth(vehicle)),
+			["vehicle"] = vehicle, 
+			["vehdistance"] = getDistanceFromVehicle(vehicle)
 		}
 		if #(pos - vehpos) < 2 then
 			Anim()
@@ -99,6 +100,29 @@ RegisterNetEvent("um-hackerphone:client:vehicletracker", function()
 		end
     end
 end)
+
+RegisterNUICallback('um-hackerphone:nuicallback:ping', function(vehicle, id)
+	local ped = PlayerPedId()
+	local pos = GetEntityCoords(ped)
+	local vehpos = GetEntityCoords(vehicle)
+	local vehicleinfo = {
+		["plate"] = QBCore.Functions.GetPlate(vehicle),
+		["vehname"] = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)):lower(),
+		["vehengine"] = math.floor(GetVehicleEngineHealth(vehicle)),
+		["vehicle"] = vehicle, 
+		["vehdistance"] = getDistanceFromVehicle(vehicle)
+	}
+	SendNUIMessage({nuimessage = 'ping', vehicleinfo = vehicleinfo})
+	return getDistanceFromVehicle(vehicle)
+end)
+
+function getDistanceFromVehicle(vehicle)
+	local ped = PlayerPedId()
+	local pos = GetEntityCoords(ped)
+	local vehpos = GetEntityCoords(vehicle)
+	local distance = math.floor(GetDistanceBetweenCoords(pos, vehpos))
+	return distance
+end
 
 RegisterNetEvent("um-hackerphone:client:notify", function()
     SendNUIMessage({nuimessage = 'error'})

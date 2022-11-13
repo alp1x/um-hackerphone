@@ -2,7 +2,7 @@ UMHackerPhone = [];
 
 UMHackerPhone.CloseKey = "Escape"
 
-UMHackerPhone.BlackoutSeconds = 10
+UMHackerPhone.BlackoutSeconds = 45
 
 UMHackerPhone.Cams = {
     [1]  : "Pacific Bank CAM#1",
@@ -51,6 +51,7 @@ UMHackerPhone.Lang = {
     userinfo: "User Information",
     vehicle: "Vehicle",
     vehicletrack: "Vehicle Tracking",
+    distance: "Distance: ",
     blackout: "Blackout",
     plate: "Plate: ",
     model: "Model: ",
@@ -63,4 +64,5 @@ UMHackerPhone.Lang = {
     explosion: "Explosion",
     hackpower: "Hack power station",
     fixpower: "Fix power station Seconds: ",
+    ping: "Ping",
 }

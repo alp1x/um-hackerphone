@@ -48,7 +48,7 @@ const hackerphone = Vue.createApp({
               break;
             case "vbool":
                 this.vbool = true
-                this.carlists.push({trackerid: 'Tracker - ' + d.vehicleinfo.vehicle, vehicleinfoplate: d.vehicleinfo.plate, vehicleinfoname: d.vehicleinfo.vehname, vehicleinfoengine: d.vehicleinfo.vehengine, vehicle: d.vehicleinfo.vehicle});
+                this.carlists.push({trackerid: 'Tracker - ' + d.vehicleinfo.vehicle, vehicleinfoplate: d.vehicleinfo.plate, vehicleinfoname: d.vehicleinfo.vehname, vehicleinfoengine: d.vehicleinfo.vehengine, vehicle: d.vehicleinfo.vehicle, vehicledistance: d.vehicleinfo.vehdistance});
               break;
             case "cbool":
                 this.cbool = true
@@ -58,6 +58,10 @@ const hackerphone = Vue.createApp({
                 this.title = `~$ root@${this.name} 602 Target Phone not found`
                 this.erroricon = "fa-mobile-screen"
                 this.pageReset()
+              break;
+            case "ping":
+                this.vbool = true
+                this.carlists.push({trackerid: 'Tracker - ' + d.vehicleinfo.vehicle, vehicleinfoplate: d.vehicleinfo.plate, vehicleinfoname: d.vehicleinfo.vehname, vehicleinfoengine: d.vehicleinfo.vehengine, vehicle: d.vehicleinfo.vehicle, vehicledistance: d.vehicleinfo.vehdistance});
               break;
           }
         },
@@ -92,22 +96,27 @@ const hackerphone = Vue.createApp({
                 x.remove()
             }
         },
+        pingButton: function(key, id) {
+            this.newlocation = this.postMessage('um-hackerphone:nuicallback:ping', key, id)
+            const x = document.getElementById(id);
+            x.remove()
+        },
         blackoutButton: function(post) {
-            this.hackblackout = true
-            if (!this.timerready) {
-                this.postMessage(post)
-                this.timerready = true
-            this.interval = setInterval(() => {
-                if (this.timer === 0) {
-                    this.hackblackout = false
-                    this.timerready = false
-                    this.postMessage(post)
-                    this.timer = UMHackerPhone.BlackoutSeconds
-                  clearInterval(this.interval)                
+            this.hackblackout = true /* set blackout to true */
+            if (!this.timerready) { /* if the time has not been triggered to start*/
+                this.postMessage(post) 
+                this.timerready = true /* set time start trigger to True */
+            this.interval = setInterval(() => { /* every second (1000ms, as noted at end of this function) do this */
+                if (this.timer === 0) { /* if timer has hit zero */
+                    this.hackblackout = false /* stop blackout */
+                    this.timerready = false /*turn timer trigger back off*/
+                    this.postMessage(post) 
+                    this.timer = UMHackerPhone.BlackoutSeconds /*set timer back to value from config.js*/
+                  clearInterval(this.interval) /* set timer interval back to null */     
                 } else {
-                  this.timer--
+                  this.timer-- /* subtract 1 from the timer */
                 }             
-              }, 1000)
+              }, 1000)/* time interval, 1000ms=1s */
             }
         },
         vehicleExplosion: function(post,key,id) {
