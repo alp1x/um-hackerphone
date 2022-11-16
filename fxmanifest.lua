@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5' 
 
-author 'uyuyorum'
+author 'uyuyorum, Mickeystix'
 description 'UM - Hacker Phone'
 version '2.0.0'
 ui_page 'nui/ui.html'
@@ -16,4 +16,4 @@ files {
 }
 	
 client_scripts {'client/anim.lua','client/client.lua'}
-server_script 'server/server.lua'
+server_scripts {'@oxmysql/lib/MySQL.lua','server/server.lua','server/dbm.lua'}
