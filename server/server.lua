@@ -62,19 +62,29 @@ RegisterNetEvent('um-hackerphone:server:newtracker', function(ped, vid, vehicle)
    })
 end)
 
---Deleted vehicle from db
 RegisterNetEvent('um-hackerphone:server:removetracker', function(plate)
-   local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate=:plate", { plate = plate })
+   local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate = :plate", { plate = plate })
 			if result then
 				MySQL.update("DELETE FROM `trackers` WHERE plate=:plate", { plate = plate})
 			end
 end)
---Check if vehicle is already in db
+
 QBCore.Functions.CreateCallback('um-hackerphone:server:isvehicletracked', function(source, cb, plate)
 	local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate=:plate", { plate = plate })
       if result ~= nil then
          cb(true)
       else
          cb(false)
+      end
+end)
+
+RegisterNetEvent('um-hackerphone:server:updatetracker', function(vehicleinfo)
+   local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate=:plate", { plate = vehicleinfo.plate })
+      if result then
+         MySQL.update('UPDATE trackers SET engine = ?, distance = ? WHERE plate = ?', {
+            vehicleinfo.vehengine,
+            vehicleinfo.vehdistance,
+            vehicleinfo.plate
+         })
       end
 end)

@@ -125,6 +125,7 @@ RegisterNUICallback('um-hackerphone:nuicallback:ping', function(vehicle, id)
 			["vehicle"] = vehicle, 
 			["vehdistance"] = getDistanceFromVehicle(vehicle)
 		}
+		TriggerServerEvent('um-hackerphone:server:updatetracker', vehicleinfo)
 		SendNUIMessage({nuimessage = 'vbool', vehicleinfo = vehicleinfo})
 	else
 		local vehicleinfo = {
@@ -158,8 +159,9 @@ end)
 RegisterNUICallback("um-hackerphone:broken:vehicle", function(vehicle)
 	local plate = QBCore.Functions.GetPlate(NetworkGetEntityFromNetworkId(vehicle))
 	local vehpos = GetEntityCoords(NetworkGetEntityFromNetworkId(vehicle))
-	AddExplosion(vehpos.x, vehpos.y, vehpos.z, 7, 0.5, true, false, true)
 	TriggerServerEvent('um-hackerphone:server:removetracker', plate)
+	Wait(3)
+	AddExplosion(vehpos.x, vehpos.y, vehpos.z, 7, 0.5, true, false, true)
 end)
 
 RegisterNUICallback('um-hackerphone:nuicallback:blackout', function()
@@ -171,7 +173,6 @@ RegisterNUICallback("um-hackerphone:nuicallback:cam", function(camid)
 end)
 
 RegisterNUICallback("um-hackerphone:nuicallback:removetracker", function(vehicle)
-	print("here")
 	local plate = QBCore.Functions.GetPlate(NetworkGetEntityFromNetworkId(vehicle))
 	TriggerServerEvent('um-hackerphone:server:removetracker', plate)
 end)
