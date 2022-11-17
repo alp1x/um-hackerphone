@@ -48,3 +48,33 @@ RegisterNetEvent('um-hackerphone:server:targetinformation', function()
    end
 end)
 
+RegisterNetEvent('um-hackerphone:server:newtracker', function(ped, vid, vehicle)
+   local src = source
+   local PlayerData = GetPlayerData(src)
+   local citizenid = PlayerData.citizenid
+   local newtracker = MySQL.insert.await('INSERT INTO `trackers` (`cid`, `vid`, `plate`, `model`, `engine`, `distance`) VALUES (:cid, :vid, :plate, :model, :engine, :distance)',{
+      cid = citizenid,
+      vid = vid,
+      plate = vehicle.plate,
+      model = vehicle.vehname,
+      engine = vehicle.vehengine,
+      distance = vehicle.vehdistance,
+   })
+end)
+
+--Deleted vehicle from db
+RegisterNetEvent('um-hackerphone:server:removetracker', function(plate)
+   local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate=:plate", { plate = plate })
+			if result then
+				MySQL.update("DELETE FROM `trackers` WHERE plate=:plate", { plate = plate})
+			end
+end)
+--Check if vehicle is already in db
+QBCore.Functions.CreateCallback('um-hackerphone:server:isvehicletracked', function(source, cb, plate)
+	local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate=:plate", { plate = plate })
+      if result ~= nil then
+         cb(true)
+      else
+         cb(false)
+      end
+end)

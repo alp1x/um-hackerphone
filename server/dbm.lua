@@ -28,11 +28,6 @@ function GetPlayerVehicles(cid, cb)
 	return MySQL.query.await('SELECT id, plate, vehicle FROM player_vehicles WHERE citizenid=:cid', { cid = cid })
 end
 
-function GetPlayerProperties(cid, cb)
-	local result =  MySQL.query.await('SELECT houselocations.label, houselocations.coords FROM player_houses INNER JOIN houselocations ON player_houses.house = houselocations.name where player_houses.citizenid = ?', {cid})
-	return result
-end
-
 function GetPlayerDataById(id)
     local Player = QBCore.Functions.GetPlayerByCitizenId(id)
     if Player ~= nil then
@@ -43,10 +38,4 @@ function GetPlayerDataById(id)
     end
 
 	-- return exports.oxmysql:executeSync('SELECT citizenid, charinfo, job FROM players WHERE citizenid = ? LIMIT 1', { id })
-end
-
-function GetOwnerName(cid)
-	local result = MySQL.scalar.await('SELECT charinfo FROM `players` WHERE LOWER(`citizenid`) = ? LIMIT 1', {cid})
-	return result
-	-- return exports.oxmysql:scalarSync('SELECT charinfo FROM `players` WHERE id=:cid LIMIT 1', { cid = cid})
 end
