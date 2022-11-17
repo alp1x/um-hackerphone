@@ -48,3 +48,43 @@ RegisterNetEvent('um-hackerphone:server:targetinformation', function()
    end
 end)
 
+RegisterNetEvent('um-hackerphone:server:newtracker', function(ped, vid, vehicle)
+   local src = source
+   local PlayerData = GetPlayerData(src)
+   local citizenid = PlayerData.citizenid
+   local newtracker = MySQL.insert.await('INSERT INTO `trackers` (`cid`, `vid`, `plate`, `model`, `engine`, `distance`) VALUES (:cid, :vid, :plate, :model, :engine, :distance)',{
+      cid = citizenid,
+      vid = vid,
+      plate = vehicle.plate,
+      model = vehicle.vehname,
+      engine = vehicle.vehengine,
+      distance = vehicle.vehdistance,
+   })
+end)
+
+RegisterNetEvent('um-hackerphone:server:removetracker', function(plate)
+   local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate = :plate", { plate = plate })
+			if result then
+				MySQL.update("DELETE FROM `trackers` WHERE plate=:plate", { plate = plate})
+			end
+end)
+
+QBCore.Functions.CreateCallback('um-hackerphone:server:isvehicletracked', function(source, cb, plate)
+	local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate=:plate", { plate = plate })
+      if result ~= nil then
+         cb(true)
+      else
+         cb(false)
+      end
+end)
+
+RegisterNetEvent('um-hackerphone:server:updatetracker', function(vehicleinfo)
+   local result = MySQL.single.await("SELECT * FROM `trackers` WHERE plate=:plate", { plate = vehicleinfo.plate })
+      if result then
+         MySQL.update('UPDATE trackers SET engine = ?, distance = ? WHERE plate = ?', {
+            vehicleinfo.vehengine,
+            vehicleinfo.vehdistance,
+            vehicleinfo.plate
+         })
+      end
+end)

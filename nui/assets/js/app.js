@@ -84,7 +84,7 @@ const hackerphone = Vue.createApp({
                 this.pageReset(tvariable)
             }
         },
-        generalButton: function(task,id) {
+        generalButton: function(task, id, vehicle) {
             const x = document.getElementById(id);
             if (task === "toggle") {
                 if (x.style.display === "none") {
@@ -93,30 +93,31 @@ const hackerphone = Vue.createApp({
                         x.style.display = "none";
                 }
             }else if (task === "delete") {
+                this.postMessage("um-hackerphone:nuicallback:removetracker", vehicle)
                 x.remove()
             }
         },
         pingButton: function(key, id) {
-            this.newlocation = this.postMessage('um-hackerphone:nuicallback:ping', key, id)
+            this.postMessage('um-hackerphone:nuicallback:ping', key, id)
             const x = document.getElementById(id);
             x.remove()
         },
         blackoutButton: function(post) {
-            this.hackblackout = true /* set blackout to true */
-            if (!this.timerready) { /* if the time has not been triggered to start*/
+            this.hackblackout = true 
+            if (!this.timerready) { 
                 this.postMessage(post) 
-                this.timerready = true /* set time start trigger to True */
-            this.interval = setInterval(() => { /* every second (1000ms, as noted at end of this function) do this */
-                if (this.timer === 0) { /* if timer has hit zero */
-                    this.hackblackout = false /* stop blackout */
-                    this.timerready = false /*turn timer trigger back off*/
+                this.timerready = true 
+            this.interval = setInterval(() => { 
+                if (this.timer === 0) { 
+                    this.hackblackout = false 
+                    this.timerready = false 
                     this.postMessage(post) 
-                    this.timer = UMHackerPhone.BlackoutSeconds /*set timer back to value from config.js*/
-                  clearInterval(this.interval) /* set timer interval back to null */     
+                    this.timer = UMHackerPhone.BlackoutSeconds
+                  clearInterval(this.interval) 
                 } else {
-                  this.timer-- /* subtract 1 from the timer */
+                  this.timer-- 
                 }             
-              }, 1000)/* time interval, 1000ms=1s */
+              }, 1000)
             }
         },
         vehicleExplosion: function(post,key,id) {

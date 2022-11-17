@@ -16,4 +16,4 @@ files {
 }
 	
 client_scripts {'client/anim.lua','client/client.lua'}
-server_scripts {'@oxmysql/lib/MySQL.lua','server/server.lua','server/dbm.lua'}
+server_scripts {'@oxmysql/lib/MySQL.lua','server/server.lua','server/utils.lua','server/dbm.lua'}
