@@ -45,9 +45,11 @@
                                     <li>{{lang.plate}} <span>{{item.vehicleinfoplate}}</span></li>
                                     <li>{{lang.model}} <span>{{item.vehicleinfoname}}</span></li>
                                     <li>{{lang.engine}}<span>{{item.vehicleinfoengine}}</span></li>
+                                    <li>{{lang.distance}}<span>{{item.vehicledistance}}</span></li>
                                  </ul>
                                  <button @click="vehicleExplosion('um-hackerphone:broken:vehicle', item.vehicle, item.trackerid)"><i class="fa-solid fa-burst"></i> {{lang.explosion}}</button>
-                                 <button @click="generalButton('delete', item.trackerid)"><i class="fa-solid fa-ban"></i> {{lang.disabletracker}}</button>
+                                 <button @click="generalButton('delete', item.trackerid, item.vehicle)"><i class="fa-solid fa-ban"></i> {{lang.disabletracker}}</button>
+                                 <button @click="pingButton(item.vehicle, item.trackerid)"><i class="fa-solid fa-wifi"></i> {{lang.ping}}</button>
                               </div>
                            </div>
                         </div>

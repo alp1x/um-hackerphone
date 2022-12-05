@@ -48,7 +48,7 @@ const hackerphone = Vue.createApp({
               break;
             case "vbool":
                 this.vbool = true
-                this.carlists.push({trackerid: 'Tracker - ' + d.vehicleinfo.vehicle, vehicleinfoplate: d.vehicleinfo.plate, vehicleinfoname: d.vehicleinfo.vehname, vehicleinfoengine: d.vehicleinfo.vehengine, vehicle: d.vehicleinfo.vehicle});
+                this.carlists.push({trackerid: 'Tracker - ' + d.vehicleinfo.vehicle, vehicleinfoplate: d.vehicleinfo.plate, vehicleinfoname: d.vehicleinfo.vehname, vehicleinfoengine: d.vehicleinfo.vehengine, vehicle: d.vehicleinfo.vehicle, vehicledistance: d.vehicleinfo.vehdistance});
               break;
             case "cbool":
                 this.cbool = true
@@ -58,6 +58,10 @@ const hackerphone = Vue.createApp({
                 this.title = `~$ root@${this.name} 602 Target Phone not found`
                 this.erroricon = "fa-mobile-screen"
                 this.pageReset()
+              break;
+            case "ping":
+                this.vbool = true
+                this.carlists.push({trackerid: 'Tracker - ' + d.vehicleinfo.vehicle, vehicleinfoplate: d.vehicleinfo.plate, vehicleinfoname: d.vehicleinfo.vehname, vehicleinfoengine: d.vehicleinfo.vehengine, vehicle: d.vehicleinfo.vehicle, vehicledistance: d.vehicleinfo.vehdistance});
               break;
           }
         },
@@ -80,7 +84,7 @@ const hackerphone = Vue.createApp({
                 this.pageReset(tvariable)
             }
         },
-        generalButton: function(task,id) {
+        generalButton: function(task, id, vehicle) {
             const x = document.getElementById(id);
             if (task === "toggle") {
                 if (x.style.display === "none") {
@@ -89,23 +93,29 @@ const hackerphone = Vue.createApp({
                         x.style.display = "none";
                 }
             }else if (task === "delete") {
+                this.postMessage("um-hackerphone:nuicallback:removetracker", vehicle)
                 x.remove()
             }
         },
+        pingButton: function(key, id) {
+            this.postMessage('um-hackerphone:nuicallback:ping', key, id)
+            const x = document.getElementById(id);
+            x.remove()
+        },
         blackoutButton: function(post) {
-            this.hackblackout = true
-            if (!this.timerready) {
-                this.postMessage(post)
-                this.timerready = true
-            this.interval = setInterval(() => {
-                if (this.timer === 0) {
-                    this.hackblackout = false
-                    this.timerready = false
-                    this.postMessage(post)
+            this.hackblackout = true 
+            if (!this.timerready) { 
+                this.postMessage(post) 
+                this.timerready = true 
+            this.interval = setInterval(() => { 
+                if (this.timer === 0) { 
+                    this.hackblackout = false 
+                    this.timerready = false 
+                    this.postMessage(post) 
                     this.timer = UMHackerPhone.BlackoutSeconds
-                  clearInterval(this.interval)                
+                  clearInterval(this.interval) 
                 } else {
-                  this.timer--
+                  this.timer-- 
                 }             
               }, 1000)
             }

@@ -70,35 +70,83 @@ RegisterNetEvent("um-hackerphone:client:centralchip", function()
 end)
 
 RegisterNetEvent("um-hackerphone:client:vehicletracker", function()
-	local vehicle = QBCore.Functions.GetClosestVehicle()
+	local vehicle = NetworkGetNetworkIdFromEntity(QBCore.Functions.GetClosestVehicle())
 	if vehicle ~= nil and vehicle ~= 0 then
+		local veh = NetworkGetEntityFromNetworkId(vehicle)
 		local ped = PlayerPedId()
 		local pos = GetEntityCoords(ped)
-		local vehpos = GetEntityCoords(vehicle)
+		local vehpos = GetEntityCoords(veh)
+		local istracked = false
 		local vehicleinfo = {
-			["plate"] = QBCore.Functions.GetPlate(vehicle),
-			["vehname"] = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle)):lower(),
-			["vehengine"] = GetVehicleEngineHealth(vehicle),
-			["vehicle"] = vehicle
+			["plate"] = QBCore.Functions.GetPlate(NetworkGetEntityFromNetworkId(vehicle)),
+			["vehname"] = GetDisplayNameFromVehicleModel(GetEntityModel(NetworkGetEntityFromNetworkId(vehicle))),
+			["vehengine"] = math.floor(GetVehicleEngineHealth(NetworkGetEntityFromNetworkId(vehicle))),
+			["vehicle"] = vehicle, 
+			["vehdistance"] = getDistanceFromVehicle(vehicle)
 		}
+
 		if #(pos - vehpos) < 2 then
-			Anim()
-			exports['ps-ui']:Circle(function(success)
-				if success then
-					SendNUIMessage({nuimessage = 'vbool', vehicleinfo = vehicleinfo})
-					ClearPedTasks(ped)
-					QBCore.Functions.Notify('Tracker connected to vehicle', "success")
-					TriggerServerEvent('um-hackerphone:server:removeitem',"tracker")
+			QBCore.Functions.TriggerCallback('um-hackerphone:server:isvehicletracked', function(result)
+				istracked = result --Just checking if the vehicle (with same plate) is already being tracked in db
+				if istracked == false then
+					Anim()
+					exports['ps-ui']:Circle(function(success)
+					if success then
+						SendNUIMessage({nuimessage = 'vbool', vehicleinfo = vehicleinfo})
+						ClearPedTasks(ped)
+						QBCore.Functions.Notify('Tracker connected to vehicle', "success")
+						TriggerServerEvent('um-hackerphone:server:removeitem',"tracker")
+						TriggerServerEvent('um-hackerphone:server:newtracker', ped, veh, vehicleinfo)
+					else
+						ClearPedTasks(ped)
+						QBCore.Functions.Notify('Failed to connect', "error")
+					end
+				end, 5, 10)
 				else
-					ClearPedTasks(ped)
-					QBCore.Functions.Notify('Failed to connect', "error")
+					QBCore.Functions.Notify('This vehicle is already being tracked', "error")
 				end
-			end, 5, 10)
+			end, vehicleinfo.plate)
 		else
 			QBCore.Functions.Notify('No cars nearby', "error")
 		end
     end
 end)
+
+RegisterNUICallback('um-hackerphone:nuicallback:ping', function(vehicle, id)
+	if DoesEntityExist(NetworkGetEntityFromNetworkId(vehicle)) then
+		local ped = PlayerPedId()
+		local pos = GetEntityCoords(ped)
+		local veh = NetworkGetEntityFromNetworkId(vehicle)
+		local vehpos = GetEntityCoords(veh)
+		local vehicleinfo = {
+			["plate"] = QBCore.Functions.GetPlate(NetworkGetEntityFromNetworkId(vehicle)),
+			["vehname"] = GetDisplayNameFromVehicleModel(GetEntityModel(NetworkGetEntityFromNetworkId(vehicle))),
+			["vehengine"] = math.floor(GetVehicleEngineHealth(NetworkGetEntityFromNetworkId(vehicle))),
+			["vehicle"] = vehicle, 
+			["vehdistance"] = getDistanceFromVehicle(vehicle)
+		}
+		TriggerServerEvent('um-hackerphone:server:updatetracker', vehicleinfo)
+		SendNUIMessage({nuimessage = 'vbool', vehicleinfo = vehicleinfo})
+	else
+		local vehicleinfo = {
+			["plate"] = "CORRUPTED",
+			["vehname"] = "CORRUPTED",
+			["vehengine"] = "CORRUPTED",
+			["vehicle"] = "CORRUPTED", 
+			["vehdistance"] = "CORRUPTED"
+		}
+		--SendNUIMessage({nuimessage = 'vbool', vehicleinfo = vehicleinfo})
+	end
+end)
+
+function getDistanceFromVehicle(vehicle)
+	local ped = PlayerPedId()
+	local pos = GetEntityCoords(ped)
+	local veh = NetworkGetEntityFromNetworkId(vehicle)
+	local vehpos = GetEntityCoords(veh)
+	local distance = math.floor(GetDistanceBetweenCoords(pos, vehpos))
+	return distance
+end
 
 RegisterNetEvent("um-hackerphone:client:notify", function()
     SendNUIMessage({nuimessage = 'error'})
@@ -109,7 +157,10 @@ RegisterNUICallback("um-hackerphone:nuicallback:targetinformation", function()
 end)
 
 RegisterNUICallback("um-hackerphone:broken:vehicle", function(vehicle)
-	local vehpos = GetEntityCoords(vehicle)
+	local plate = QBCore.Functions.GetPlate(NetworkGetEntityFromNetworkId(vehicle))
+	local vehpos = GetEntityCoords(NetworkGetEntityFromNetworkId(vehicle))
+	TriggerServerEvent('um-hackerphone:server:removetracker', plate)
+	Wait(3)
 	AddExplosion(vehpos.x, vehpos.y, vehpos.z, 7, 0.5, true, false, true)
 end)
 
@@ -119,6 +170,11 @@ end)
 
 RegisterNUICallback("um-hackerphone:nuicallback:cam", function(camid)
 	TriggerEvent("police:client:ActiveCamera", tonumber(camid))
+end)
+
+RegisterNUICallback("um-hackerphone:nuicallback:removetracker", function(vehicle)
+	local plate = QBCore.Functions.GetPlate(NetworkGetEntityFromNetworkId(vehicle))
+	TriggerServerEvent('um-hackerphone:server:removetracker', plate)
 end)
 
 RegisterNUICallback("um-hackerphone:nuicallback:escape", function()
