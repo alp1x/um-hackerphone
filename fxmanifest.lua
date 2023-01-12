@@ -17,3 +17,5 @@ files {
 	
 client_scripts {'client/anim.lua','client/client.lua'}
 server_script 'server/server.lua'
+
+lua54 'yes'
